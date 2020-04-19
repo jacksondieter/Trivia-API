@@ -35,6 +35,8 @@ class TriviaTestCase(unittest.TestCase):
             'searchTerm':'movie'
         }
 
+        self.quizz = {'previous_questions': [1,2],'quiz_category':{ 'id':1,'type':'science'}}
+
         self.question_id = 0
 
 
@@ -92,9 +94,15 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
 
     def test_create_list_question(self):
-        res = self.client().get('categories/1/questions')
+        res = self.client().get('/categories/1/questions')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
+
+    def test_get_question_for_quiz(self):
+        res = self.client().post('/quizzes',json=self.quizz)
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
