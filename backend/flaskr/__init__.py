@@ -145,7 +145,7 @@ def create_app(test_config=None):
     @app.route('/quizzes', methods=['POST'])
     def get_question_for_quiz():
         body = request.get_json()
-        if 'quiz_category' in body:
+        try:
             previous_questions =  body.get('previous_questions',[])
             category =  body.get('quiz_category')
             if category['id']==0:
@@ -157,7 +157,6 @@ def create_app(test_config=None):
 
             if len(rest_questions) > 0:
                 question = rest_questions[random.randint(0,len(rest_questions)-1)]
-                print(question)
                 return jsonify({
                     'success': True,
                     'question':question
@@ -167,7 +166,8 @@ def create_app(test_config=None):
                     'success': True,
                     'question':None
                     })
-        abort(404)
+        except:
+            abort(404)
 
     @app.errorhandler(400)
     def bad_request(error):
